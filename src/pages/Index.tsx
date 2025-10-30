@@ -146,7 +146,7 @@ const Index = () => {
                     <p className="text-muted-foreground mb-6 max-w-2xl">
                       Пополни баланс и удвой свой первый депозит! Начни выигрывать легендарные скины CS2 прямо сейчас.
                     </p>
-                    <Button size="lg" className="bg-gradient-gold text-primary-foreground hover:opacity-90 font-semibold">
+                    <Button size="lg" className="bg-gold text-primary-foreground hover:bg-gold/90 font-semibold">
                       Пополнить баланс
                     </Button>
                   </div>
