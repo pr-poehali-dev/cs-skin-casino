@@ -1,12 +1,429 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import Icon from '@/components/ui/icon';
+
+interface SkinItem {
+  id: number;
+  name: string;
+  image: string;
+  price: number;
+  rarity: 'common' | 'rare' | 'epic' | 'legendary';
+}
+
+interface ChatMessage {
+  id: number;
+  user: string;
+  avatar: string;
+  message: string;
+  time: string;
+}
+
+const mockSkins: SkinItem[] = [
+  { id: 1, name: 'AK-47 | Redline', image: '/placeholder.svg', price: 45.50, rarity: 'epic' },
+  { id: 2, name: 'AWP | Dragon Lore', image: '/placeholder.svg', price: 1850.00, rarity: 'legendary' },
+  { id: 3, name: 'M4A4 | Howl', image: '/placeholder.svg', price: 3200.00, rarity: 'legendary' },
+  { id: 4, name: 'Glock-18 | Fade', image: '/placeholder.svg', price: 275.00, rarity: 'epic' },
+  { id: 5, name: 'Karambit | Fade', image: '/placeholder.svg', price: 1250.00, rarity: 'legendary' },
+  { id: 6, name: 'Desert Eagle | Blaze', image: '/placeholder.svg', price: 420.00, rarity: 'rare' },
+];
+
+const mockMessages: ChatMessage[] = [
+  { id: 1, user: 'ProGamer', avatar: '/placeholder.svg', message: 'Только что выиграл AWP!', time: '2 мин' },
+  { id: 2, user: 'LuckyShot', avatar: '/placeholder.svg', message: 'Кто в рулетку?', time: '5 мин' },
+  { id: 3, user: 'SkinHunter', avatar: '/placeholder.svg', message: 'Легендарка!!', time: '7 мин' },
+];
 
 const Index = () => {
+  const [balance, setBalance] = useState(1250.50);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [activeTab, setActiveTab] = useState('home');
+  const [isSpinning, setIsSpinning] = useState(false);
+  const [betAmount, setBetAmount] = useState(10);
+
+  const rarityColors = {
+    common: 'bg-gray-500',
+    rare: 'bg-blue-500',
+    epic: 'bg-purple',
+    legendary: 'bg-gold',
+  };
+
+  const handleSpin = () => {
+    if (balance >= betAmount) {
+      setIsSpinning(true);
+      setBalance(prev => prev - betAmount);
+      setTimeout(() => {
+        setIsSpinning(false);
+        const won = Math.random() > 0.5;
+        if (won) {
+          setBalance(prev => prev + betAmount * 2);
+        }
+      }, 3000);
+    }
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4 color-black text-black">Добро пожаловать!</h1>
-        <p className="text-xl text-gray-600">тут будет отображаться ваш проект</p>
-      </div>
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-gradient-gold flex items-center justify-center font-bold text-2xl text-primary-foreground">
+              C
+            </div>
+            <h1 className="text-2xl font-bold bg-gradient-gold bg-clip-text text-transparent">
+              CS2 CASINO
+            </h1>
+          </div>
+
+          <nav className="hidden md:flex items-center gap-6">
+            <Button variant="ghost" onClick={() => setActiveTab('home')} className="text-gold hover:text-gold/80">
+              Главная
+            </Button>
+            <Button variant="ghost" onClick={() => setActiveTab('roulette')} className="text-foreground hover:text-gold">
+              Рулетка
+            </Button>
+            <Button variant="ghost" onClick={() => setActiveTab('jackpot')} className="text-foreground hover:text-gold">
+              Джекпот
+            </Button>
+            <Button variant="ghost" onClick={() => setActiveTab('inventory')} className="text-foreground hover:text-gold">
+              Инвентарь
+            </Button>
+          </nav>
+
+          {isLoggedIn ? (
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 bg-muted px-4 py-2 rounded-lg">
+                <Icon name="Wallet" className="text-gold" size={20} />
+                <span className="font-semibold text-gold">${balance.toFixed(2)}</span>
+              </div>
+              <Avatar className="cursor-pointer border-2 border-gold">
+                <AvatarImage src="/placeholder.svg" />
+                <AvatarFallback className="bg-purple text-white">U</AvatarFallback>
+              </Avatar>
+            </div>
+          ) : (
+            <Button onClick={() => setIsLoggedIn(true)} className="bg-gradient-gold text-primary-foreground hover:opacity-90 font-semibold">
+              <Icon name="LogIn" className="mr-2" size={18} />
+              Войти через Steam
+            </Button>
+          )}
+        </div>
+      </header>
+
+      <main className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="lg:col-span-3">
+            {activeTab === 'home' && (
+              <div className="space-y-8 animate-fade-in">
+                <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple/20 to-gold/20 p-8 md:p-12 border border-gold/30">
+                  <div className="relative z-10">
+                    <Badge className="mb-4 bg-gold text-primary-foreground">Новичкам</Badge>
+                    <h2 className="text-4xl md:text-5xl font-bold mb-4">
+                      Получи <span className="text-gold">+100%</span> к первому депозиту
+                    </h2>
+                    <p className="text-muted-foreground mb-6 max-w-2xl">
+                      Пополни баланс и удвой свой первый депозит! Начни выигрывать легендарные скины CS2 прямо сейчас.
+                    </p>
+                    <Button size="lg" className="bg-gradient-gold text-primary-foreground hover:opacity-90 font-semibold">
+                      Пополнить баланс
+                    </Button>
+                  </div>
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-gold/10 rounded-full blur-3xl animate-pulse-gold"></div>
+                </section>
+
+                <section>
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-2xl font-bold">Популярные скины</h3>
+                    <Button variant="ghost" className="text-gold hover:text-gold/80">
+                      Смотреть все <Icon name="ChevronRight" className="ml-1" size={16} />
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {mockSkins.map((skin) => (
+                      <Card key={skin.id} className="group overflow-hidden bg-card hover:border-gold transition-all duration-300 cursor-pointer">
+                        <div className="relative aspect-video bg-muted overflow-hidden">
+                          <img 
+                            src={skin.image} 
+                            alt={skin.name}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                          />
+                          <Badge className={`absolute top-2 right-2 ${rarityColors[skin.rarity]} text-white`}>
+                            {skin.rarity}
+                          </Badge>
+                        </div>
+                        <div className="p-4">
+                          <h4 className="font-semibold mb-2 group-hover:text-gold transition-colors">{skin.name}</h4>
+                          <div className="flex items-center justify-between">
+                            <span className="text-2xl font-bold text-gold">${skin.price}</span>
+                            <Button size="sm" className="bg-purple hover:bg-purple/80">
+                              Добавить
+                            </Button>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </section>
+
+                <section className="bg-card rounded-2xl p-6 border border-border">
+                  <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                    <Icon name="TrendingUp" className="text-gold" />
+                    Последние выигрыши
+                  </h3>
+                  <div className="space-y-3">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="flex items-center justify-between bg-muted rounded-lg p-4">
+                        <div className="flex items-center gap-3">
+                          <Avatar>
+                            <AvatarImage src="/placeholder.svg" />
+                            <AvatarFallback className="bg-purple text-white">W</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="font-semibold">Winner{i}</p>
+                            <p className="text-sm text-muted-foreground">выиграл AWP | Dragon Lore</p>
+                          </div>
+                        </div>
+                        <span className="text-xl font-bold text-gold">$1,850</span>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              </div>
+            )}
+
+            {activeTab === 'roulette' && (
+              <div className="space-y-6 animate-fade-in">
+                <Card className="p-8 bg-card border-gold/30">
+                  <h2 className="text-3xl font-bold mb-6 text-center">
+                    <Icon name="CircleDot" className="inline mr-2 text-gold" />
+                    Классическая рулетка
+                  </h2>
+                  
+                  <div className="relative mb-8 bg-muted rounded-xl p-8 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gold/10 to-transparent animate-slide-in"></div>
+                    <div className={`flex gap-4 overflow-hidden ${isSpinning ? 'animate-slide-in' : ''}`}>
+                      {[...Array(10)].map((_, i) => (
+                        <div
+                          key={i}
+                          className={`min-w-[120px] h-[120px] rounded-xl flex items-center justify-center text-white font-bold text-2xl ${
+                            i % 3 === 0 ? 'bg-gold' : i % 3 === 1 ? 'bg-purple' : 'bg-destructive'
+                          }`}
+                        >
+                          {i % 3 === 0 ? '×2' : i % 3 === 1 ? '×3' : '×0'}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-center gap-4">
+                      <Button
+                        variant="outline"
+                        onClick={() => setBetAmount(Math.max(1, betAmount - 10))}
+                        className="w-12 h-12"
+                      >
+                        -
+                      </Button>
+                      <div className="text-center">
+                        <p className="text-sm text-muted-foreground mb-1">Ставка</p>
+                        <p className="text-3xl font-bold text-gold">${betAmount}</p>
+                      </div>
+                      <Button
+                        variant="outline"
+                        onClick={() => setBetAmount(Math.min(balance, betAmount + 10))}
+                        className="w-12 h-12"
+                      >
+                        +
+                      </Button>
+                    </div>
+
+                    <Button
+                      onClick={handleSpin}
+                      disabled={isSpinning || balance < betAmount}
+                      className="w-full h-14 text-lg font-bold bg-gradient-gold text-primary-foreground hover:opacity-90 disabled:opacity-50"
+                    >
+                      {isSpinning ? (
+                        <>
+                          <Icon name="Loader2" className="mr-2 animate-spin" />
+                          Крутим...
+                        </>
+                      ) : (
+                        'КРУТИТЬ'
+                      )}
+                    </Button>
+
+                    <div className="grid grid-cols-3 gap-3">
+                      {[10, 50, 100].map((amount) => (
+                        <Button
+                          key={amount}
+                          variant="outline"
+                          onClick={() => setBetAmount(amount)}
+                          className={betAmount === amount ? 'border-gold' : ''}
+                        >
+                          ${amount}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                </Card>
+
+                <Card className="p-6 bg-card">
+                  <h3 className="text-xl font-bold mb-4">Правила игры</h3>
+                  <ul className="space-y-2 text-muted-foreground">
+                    <li className="flex items-start gap-2">
+                      <Icon name="Check" className="text-gold mt-1" size={16} />
+                      <span>Выберите сумму ставки и нажмите "КРУТИТЬ"</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Icon name="Check" className="text-gold mt-1" size={16} />
+                      <span>Золотой сектор (×2) - удваивает вашу ставку</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Icon name="Check" className="text-gold mt-1" size={16} />
+                      <span>Фиолетовый сектор (×3) - утраивает вашу ставку</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Icon name="Check" className="text-gold mt-1" size={16} />
+                      <span>Красный сектор (×0) - вы теряете ставку</span>
+                    </li>
+                  </ul>
+                </Card>
+              </div>
+            )}
+
+            {activeTab === 'jackpot' && (
+              <div className="animate-fade-in">
+                <Card className="p-8 bg-card text-center border-gold/30">
+                  <Icon name="Trophy" className="mx-auto mb-4 text-gold" size={64} />
+                  <h2 className="text-3xl font-bold mb-4">Джекпот</h2>
+                  <div className="text-6xl font-bold text-gold mb-6 animate-pulse-gold">
+                    $15,847.50
+                  </div>
+                  <p className="text-muted-foreground mb-6">
+                    Участников: 12 | До розыгрыша: 5 минут
+                  </p>
+                  <Button className="bg-gradient-gold text-primary-foreground hover:opacity-90 font-semibold text-lg px-8 py-6">
+                    Участвовать в розыгрыше
+                  </Button>
+                </Card>
+              </div>
+            )}
+
+            {activeTab === 'inventory' && (
+              <div className="animate-fade-in">
+                <Card className="p-6 bg-card">
+                  <h2 className="text-2xl font-bold mb-6">Ваш инвентарь</h2>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {mockSkins.slice(0, 4).map((skin) => (
+                      <div key={skin.id} className="bg-muted rounded-lg p-4 hover:border-gold border border-transparent transition-all">
+                        <img src={skin.image} alt={skin.name} className="w-full aspect-square object-cover rounded mb-2" />
+                        <p className="text-sm font-semibold truncate">{skin.name}</p>
+                        <p className="text-gold font-bold">${skin.price}</p>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+              </div>
+            )}
+          </div>
+
+          <div className="lg:col-span-1">
+            <Card className="sticky top-24 bg-card border-border">
+              <div className="p-4 border-b border-border">
+                <h3 className="font-bold flex items-center gap-2">
+                  <Icon name="MessageCircle" className="text-gold" />
+                  Live Чат
+                </h3>
+              </div>
+              <ScrollArea className="h-[500px] p-4">
+                <div className="space-y-4">
+                  {mockMessages.map((msg) => (
+                    <div key={msg.id} className="flex gap-3">
+                      <Avatar className="w-8 h-8">
+                        <AvatarImage src={msg.avatar} />
+                        <AvatarFallback className="bg-purple text-white text-xs">
+                          {msg.user[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-sm font-semibold">{msg.user}</span>
+                          <span className="text-xs text-muted-foreground">{msg.time}</span>
+                        </div>
+                        <p className="text-sm text-muted-foreground">{msg.message}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+              <div className="p-4 border-t border-border">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Написать сообщение..."
+                    className="flex-1 bg-muted px-3 py-2 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+                    disabled={!isLoggedIn}
+                  />
+                  <Button size="sm" className="bg-gold text-primary-foreground" disabled={!isLoggedIn}>
+                    <Icon name="Send" size={16} />
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </main>
+
+      <footer className="border-t border-border mt-16 py-8 bg-card/50">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <h4 className="font-bold mb-4 text-gold">О казино</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><a href="#" className="hover:text-gold transition-colors">О нас</a></li>
+                <li><a href="#" className="hover:text-gold transition-colors">Правила</a></li>
+                <li><a href="#" className="hover:text-gold transition-colors">FAQ</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-bold mb-4 text-gold">Игры</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><a href="#" className="hover:text-gold transition-colors">Рулетка</a></li>
+                <li><a href="#" className="hover:text-gold transition-colors">Джекпот</a></li>
+                <li><a href="#" className="hover:text-gold transition-colors">Кейсы</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-bold mb-4 text-gold">Помощь</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><a href="#" className="hover:text-gold transition-colors">Поддержка</a></li>
+                <li><a href="#" className="hover:text-gold transition-colors">Промокоды</a></li>
+                <li><a href="#" className="hover:text-gold transition-colors">Партнёрам</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-bold mb-4 text-gold">Социальные сети</h4>
+              <div className="flex gap-3">
+                <Button size="sm" variant="outline" className="w-10 h-10 p-0">
+                  <Icon name="Twitter" size={18} />
+                </Button>
+                <Button size="sm" variant="outline" className="w-10 h-10 p-0">
+                  <Icon name="Facebook" size={18} />
+                </Button>
+                <Button size="sm" variant="outline" className="w-10 h-10 p-0">
+                  <Icon name="Youtube" size={18} />
+                </Button>
+              </div>
+            </div>
+          </div>
+          <div className="mt-8 pt-8 border-t border-border text-center text-sm text-muted-foreground">
+            <p>© 2024 CS2 Casino. Все права защищены. Играйте ответственно.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
