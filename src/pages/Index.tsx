@@ -326,7 +326,7 @@ const Index = () => {
                   <p className="text-muted-foreground mb-6">
                     Участников: 12 | До розыгрыша: 5 минут
                   </p>
-                  <Button className="bg-gradient-gold text-primary-foreground hover:opacity-90 font-semibold text-lg px-8 py-6">
+                  <Button className="bg-gold text-primary-foreground hover:bg-gold/90 font-semibold text-lg px-8 py-6">
                     Участвовать в розыгрыше
                   </Button>
                 </Card>
