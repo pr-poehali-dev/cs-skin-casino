@@ -62,6 +62,7 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [isSpinning, setIsSpinning] = useState(false);
   const [betAmount, setBetAmount] = useState(10);
+  const [showExplosion, setShowExplosion] = useState(false);
 
   const rarityColors = {
     common: 'bg-gray-500',
@@ -84,8 +85,33 @@ const Index = () => {
     }
   };
 
+  const handleDeposit = () => {
+    const audio = new Audio('data:audio/wav;base64,UklGRnoFAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoFAACAgoSGiIqMjpCSlJaYmpyeoKKkpqiqrK6wsrS2uLq8vsDCxMbIyszO0NLU1tja3N7g4uTm6Orq6Ojm5OLg3tza2NbU0tDOzMrIxsS+vLq4tre0sq+urKqop6SioZ+enJqYl5WTkpCPjYyKiYeFhIOCgYB/fXx7enl4d3Z1dHNycXBvbm1sa2ppaGdmZWRjY2JhYF9fXl1cXFtaWVlYWFdWVlVUVFNTUlFRUFBPT05OTU1MTEtLSkpJSUlISEdHRkZGRUVEREREQ0NDQkJCQkFBQUFAQEBAQD9/f39/fn5+fn5+fX19fX19fH18fHx8fHx7e3t7e3t6enp6enp6enl5eXl5eXl5eHh4eXl5eXl5eXp6enp6ent7e3t7e3x8fHx8fHx9fX19fX59fn5+fn5/f39/f4BAQEBAQUFBQUFCQkJCQkNDQ0NDRERERERFRUVGRkZGR0dHSEhISUlJSkpKS0tLTExMTU1OTk5PT1BQUFBRUVJSUlNTVFRUVVZWVldXWFhZWVlaWlxcXV1eX19gYGFiYmNkZGVmZ2doaWpqa2xtbm5vcHFxcnN0dXZ3d3h5ent8fX5/gIGCg4SFhoeIiYqLjI2Oj5CRkpOUlZaXmJmam5ydnp+goaKjpKWmp6ipqqusra6vsLGys7S1tre4ubq7vL2+v8DBwsPExcbHyMnKy8zNztDS09TV1tfY2drb3N3e3+Dh4uPk5ebn6Onp6ejo5uXk4+Lh4N/e3dzb2tnY19bV1NPSz87NzMrJx8bFxMLBv764t7a0s7Gwr66sq6mop6WjoquhnJqYl5WTkY+OjImIhYSDgYB+fXt5eHZ1c3JwbnVs');
+    audio.volume = 0.3;
+    audio.play().catch(() => {});
+    
+    setShowExplosion(true);
+    setTimeout(() => setShowExplosion(false), 1000);
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
+      {showExplosion && (
+        <div className="explosion-effect">
+          {[...Array(12)].map((_, i) => (
+            <div
+              key={i}
+              className="explosion-particle"
+              style={{
+                background: `hsl(${45 + i * 30}, 85%, 54%)`,
+                left: '50%',
+                top: '50%',
+                transform: `translate(-50%, -50%) rotate(${i * 30}deg) translateY(-100px)`,
+              }}
+            />
+          ))}
+        </div>
+      )}
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -146,7 +172,7 @@ const Index = () => {
                     <p className="text-muted-foreground mb-6 max-w-2xl">
                       Пополни баланс и удвой свой первый депозит! Начни выигрывать легендарные скины CS2 прямо сейчас.
                     </p>
-                    <Button size="lg" className="bg-gold text-primary-foreground hover:bg-gold/90 font-semibold">
+                    <Button size="lg" onClick={handleDeposit} className="bg-gold text-primary-foreground hover:bg-gold/90 font-semibold">
                       Пополнить баланс
                     </Button>
                   </div>
