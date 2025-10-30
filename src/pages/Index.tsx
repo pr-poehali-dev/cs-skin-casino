@@ -14,6 +14,14 @@ interface SkinItem {
   rarity: 'common' | 'rare' | 'epic' | 'legendary';
 }
 
+interface CaseBox {
+  id: number;
+  name: string;
+  price: number;
+  color: string;
+  items: string[];
+}
+
 interface ChatMessage {
   id: number;
   user: string;
@@ -29,6 +37,17 @@ const mockSkins: SkinItem[] = [
   { id: 4, name: 'Glock-18 | Fade', image: '/placeholder.svg', price: 275.00, rarity: 'epic' },
   { id: 5, name: 'Karambit | Fade', image: '/placeholder.svg', price: 1250.00, rarity: 'legendary' },
   { id: 6, name: 'Desert Eagle | Blaze', image: '/placeholder.svg', price: 420.00, rarity: 'rare' },
+];
+
+const caseBoxes: CaseBox[] = [
+  { id: 1, name: 'Стартовый кейс', price: 39, color: 'from-blue-600 to-cyan-500', items: ['AK-47 | Redline', 'Glock-18', 'USP-S'] },
+  { id: 2, name: 'Классический кейс', price: 99, color: 'from-purple-600 to-pink-500', items: ['AWP | Neo-Noir', 'M4A4', 'Desert Eagle'] },
+  { id: 3, name: 'Премиум кейс', price: 299, color: 'from-orange-600 to-yellow-500', items: ['Karambit', 'AK-47 | Vulcan', 'AWP | Asiimov'] },
+  { id: 4, name: 'Элитный кейс', price: 599, color: 'from-red-600 to-pink-600', items: ['Butterfly Knife', 'M4A4 | Howl', 'AWP | Dragon Lore'] },
+  { id: 5, name: 'Легендарный кейс', price: 1499, color: 'from-purple-700 to-indigo-600', items: ['Karambit | Fade', 'AK-47 | Fire Serpent', 'Sport Gloves'] },
+  { id: 6, name: 'Мифический кейс', price: 2999, color: 'from-yellow-600 to-orange-600', items: ['Butterfly | Doppler', 'AWP | Medusa', 'Driver Gloves'] },
+  { id: 7, name: 'Божественный кейс', price: 5999, color: 'from-gold to-yellow-500', items: ['Karambit | Crimson Web', 'M4A4 | Poseidon', 'Specialist Gloves'] },
+  { id: 8, name: 'АГРО кейс', price: 10000, color: 'from-gold via-yellow-400 to-gold', items: ['Все легендарные скины', 'Редчайшие ножи', 'Эксклюзивные перчатки'] },
 ];
 
 const mockMessages: ChatMessage[] = [
@@ -136,30 +155,32 @@ const Index = () => {
 
                 <section>
                   <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-2xl font-bold">Популярные скины</h3>
-                    <Button variant="ghost" className="text-gold hover:text-gold/80">
-                      Смотреть все <Icon name="ChevronRight" className="ml-1" size={16} />
-                    </Button>
+                    <h3 className="text-2xl font-bold">Доступные кейсы</h3>
+                    <Badge className="bg-gold text-primary-foreground">от 39₽ до 10,000₽</Badge>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {mockSkins.map((skin) => (
-                      <Card key={skin.id} className="group overflow-hidden bg-card hover:border-gold transition-all duration-300 cursor-pointer">
-                        <div className="relative aspect-video bg-muted overflow-hidden">
-                          <img 
-                            src={skin.image} 
-                            alt={skin.name}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                          />
-                          <Badge className={`absolute top-2 right-2 ${rarityColors[skin.rarity]} text-white`}>
-                            {skin.rarity}
-                          </Badge>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {caseBoxes.map((caseBox) => (
+                      <Card key={caseBox.id} className="group overflow-hidden bg-card hover:border-gold transition-all duration-300 cursor-pointer">
+                        <div className={`relative aspect-square bg-gradient-to-br ${caseBox.color} p-6 flex items-center justify-center overflow-hidden`}>
+                          <div className="relative z-10 text-center">
+                            <div className="w-20 h-20 mx-auto mb-3 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                              <Icon name="Package" className="text-white" size={40} />
+                            </div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                          </div>
+                          <div className="absolute top-2 right-2">
+                            <Badge className="bg-black/50 text-white backdrop-blur-sm">
+                              {caseBox.items.length}+ предметов
+                            </Badge>
+                          </div>
                         </div>
                         <div className="p-4">
-                          <h4 className="font-semibold mb-2 group-hover:text-gold transition-colors">{skin.name}</h4>
+                          <h4 className="font-bold mb-2 group-hover:text-gold transition-colors">{caseBox.name}</h4>
+                          <p className="text-xs text-muted-foreground mb-3 line-clamp-2">{caseBox.items.join(', ')}</p>
                           <div className="flex items-center justify-between">
-                            <span className="text-2xl font-bold text-gold">${skin.price}</span>
-                            <Button size="sm" className="bg-purple hover:bg-purple/80">
-                              Добавить
+                            <span className="text-2xl font-bold text-gold">{caseBox.price}₽</span>
+                            <Button size="sm" className="bg-gradient-gold text-primary-foreground hover:opacity-90">
+                              Открыть
                             </Button>
                           </div>
                         </div>
