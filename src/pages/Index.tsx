@@ -98,16 +98,16 @@ const Index = () => {
           </div>
 
           <nav className="hidden md:flex items-center gap-6">
-            <Button variant="ghost" onClick={() => setActiveTab('home')} className="text-gold hover:text-gold/80">
+            <Button variant="ghost" onClick={() => setActiveTab('home')} className="text-gold hover:text-gold">
               Главная
             </Button>
-            <Button variant="ghost" onClick={() => setActiveTab('roulette')} className="text-foreground hover:text-gold">
+            <Button variant="ghost" onClick={() => setActiveTab('roulette')} className="text-foreground hover:text-foreground">
               Рулетка
             </Button>
-            <Button variant="ghost" onClick={() => setActiveTab('jackpot')} className="text-foreground hover:text-gold">
+            <Button variant="ghost" onClick={() => setActiveTab('jackpot')} className="text-foreground hover:text-foreground">
               Джекпот
             </Button>
-            <Button variant="ghost" onClick={() => setActiveTab('inventory')} className="text-foreground hover:text-gold">
+            <Button variant="ghost" onClick={() => setActiveTab('inventory')} className="text-foreground hover:text-foreground">
               Инвентарь
             </Button>
           </nav>
