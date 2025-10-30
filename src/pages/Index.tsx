@@ -264,7 +264,7 @@ const Index = () => {
                     <Button
                       onClick={handleSpin}
                       disabled={isSpinning || balance < betAmount}
-                      className="w-full h-14 text-lg font-bold bg-gradient-gold text-primary-foreground hover:opacity-90 disabled:opacity-50"
+                      className="w-full h-14 text-lg font-bold bg-gold text-primary-foreground hover:bg-gold/90 disabled:opacity-50"
                     >
                       {isSpinning ? (
                         <>
